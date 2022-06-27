@@ -6,7 +6,8 @@ let erasebtn = document.querySelector('#erase');
 let clearbtn = document.querySelector('#clear');
 let evaluate = document.querySelector('#evaluate');
  
-const regra1 = new RegExp('^[%*\+\/]');
+const regra1 = new RegExp('^[%*+\/]');
+const regra2 = new RegExp('[*-\/+.%]{2}');
 
 // Visor da calculadora
 let realTimeScreenValue = []
@@ -32,23 +33,41 @@ buttons.forEach((btn) => {
             realTimeScreenValue.push(btn.value)
             currentInput.innerHTML = realTimeScreenValue.join('');
 
-            // Executar e mostrar a resposta em tempo real
-            if (btn.classList.contains('num_btn')) {
+            //Caso ja tenha clickado em igual e depois clickou em outro botão
+            currentInput.className = 'currentInput';
+            answerScreen.className = 'answerScreen';
+            answerScreen.style.color = "rgba(150, 150, 150, 0.87)";
 
-                answerScreen.innerHTML = eval(realTimeScreenValue.join(''));
 
-            }
+
             //Não deixa digitar algum caracter no começo
-            if(regra1.test(realTimeScreenValue)){
+            if(regra1.test(currentInput.innerHTML)){
                 realTimeScreenValue.pop();
                 currentInput.innerHTML = realTimeScreenValue.join('');
-                answerScreen.innerHTML = eval(realTimeScreenValue.join(''));
             }
+            //Não deixa digitar caracteres multiplos em seguida
+            if(regra2.test(currentInput.innerHTML)){
+                realTimeScreenValue.pop();
+                currentInput.innerHTML = realTimeScreenValue.join('');
+
+            }
+
+            // Executar e mostrar a resposta em tempo real
+            if (btn.classList.contains('num_btn')) {
+                answerScreen.innerHTML = eval(realTimeScreenValue.join(''));
+
+            }
+
 
         }
 
-        // Quando o evento for um botão
+        // Quando o evento for um botão de apagar
         if (btn.id.match('erase')) {
+            //Caso ja tenha clickado em igual e depois clickou em outro botão
+            currentInput.className = 'currentInput';
+            answerScreen.className = 'answerScreen';
+            answerScreen.style.color = "rgba(150, 150, 150, 0.87)";
+
             realTimeScreenValue.pop();
             currentInput.innerHTML = realTimeScreenValue.join('');
             answerScreen.innerHTML = eval(realTimeScreenValue.join(''));
